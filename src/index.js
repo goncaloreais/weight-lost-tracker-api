@@ -8,7 +8,11 @@ if(!process.env.ON_HEROKU) {
 const app = express();
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO_DB_URI || secrets.mongo_uri);
+mongoose.connect(
+    process.env.MONGO_DB_URI || 
+    secrets.mongo_uri, { useNewUrlParser: true, useUnifiedTopology: true }
+);
+
 const db = mongoose.connection;
 
 if(!db) {
