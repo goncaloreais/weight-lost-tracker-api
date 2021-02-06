@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 // required imports
-const routes = require('./app/routes');
+const routes = require('./routes');
 
 // adds reference to secrets file when running locally
 let secrets = null;
