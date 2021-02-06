@@ -1,8 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
+let secrets = null;
 
 if(!process.env.ON_HEROKU) {
-    const secrets = require('../secrets.json');
+    secrets = require('../secrets.json');
 }
 
 const app = express();
