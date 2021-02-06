@@ -2,6 +2,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
+// required imports
+const routes = require('./app/routes');
+
 // adds reference to secrets file when running locally
 let secrets = null;
 if(!process.env.ON_HEROKU) {
@@ -22,6 +25,9 @@ const db = mongoose.connection;
 if(!db) { 
     console.log("Error connecting to the db!"); 
 }
+
+// routes usage
+app.use('/', routes);
 
 // default error
 app.use((req, res) => res.status(404).send({
