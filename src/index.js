@@ -1,11 +1,23 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const secrets = require('../secrets.json');
 
 const app = express();
 app.use(express.json());
 
+mongoose.connect(process.env.MONGO_DB_URI || secrets.mongo_uri);
+const db = mongoose.connection;
+
+if(!db) {
+    console.log("Error connecting db");
+}
+else {
+    console.log("Db connected successfully");
+}
+
 app.use((req, res) => res.send('Test!'));
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log('Server is running at port ' + port + '!');
 });

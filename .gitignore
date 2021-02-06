@@ -1,5 +1,5 @@
 # Sensitive Info
-credentials.json
+secrets.json
 
 # Logs
 logs
