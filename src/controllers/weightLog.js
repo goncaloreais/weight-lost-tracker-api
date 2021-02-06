@@ -1,5 +1,8 @@
+// import required dependencies
+const httpResponse = require('../utils/httpResponses');
+
 // imports required models
-const WeightLog = require('../models/WeightLog');
+const WeightLog = require('../models/WeightLog/WeightLog');
 
 // gets every WeightLog
 function get(req, res) {
@@ -21,7 +24,16 @@ function get(req, res) {
 
 // creates a new WeightLog
 function post(req, res) {
+
+    // no weight was provided
+    if(!req.body.weight) {
+        res.status(422).send(
+            httpResponse.errorResponse(422, "The property 'weight' was not provided.")
+        );
+    }
+
     let weightLog = new WeightLog();
+    weightLog.weight = req.body.weight;
     
     WeightLog.create(weightLog, (err) => {
         if (err) {
