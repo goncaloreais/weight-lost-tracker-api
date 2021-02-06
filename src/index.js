@@ -1,4 +1,5 @@
 const express = require('express');
+const secrets = require('../secrets.json');
 
 const app = express();
 app.use(express.json());
