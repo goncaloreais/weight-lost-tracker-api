@@ -23,7 +23,12 @@ else {
     console.log("Db connected successfully");
 }
 
-app.use((req, res) => res.send('Test!'));
+// default error
+app.use((req, res) => res.status(404).send({
+    code: 404,
+    message: 'Not found!',
+    status: 'error'
+}));
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
