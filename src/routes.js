@@ -8,3 +8,6 @@ const weightLogCtrl = require('./controllers/weightLog');
 router.route('/weight-log')
     .get(weightLogCtrl.get)
     .post(weightLogCtrl.post);
+
+// exports routes
+module.exports = router;
