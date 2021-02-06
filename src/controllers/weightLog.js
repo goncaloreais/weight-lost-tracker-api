@@ -1,5 +1,5 @@
 // imports required models
-const WeightLog = require('../models/WeightLog');
+const WeightLog = require('../models/WeightLog/WeightLog');
 
 // gets every WeightLog
 function get(req, res) {
@@ -22,6 +22,9 @@ function get(req, res) {
 // creates a new WeightLog
 function post(req, res) {
     let weightLog = new WeightLog();
+
+    weightLog.date = 
+    weightLog.weight
     
     WeightLog.create(weightLog, (err) => {
         if (err) {
