@@ -3,7 +3,12 @@ function insertTimestamp() {
     return Date.now();
 }
 
+function isNumber(value) {
+    return typeof value === 'number';
+}
+
 // exports functions
 module.exports = { 
-    insertTimestamp
+    insertTimestamp,
+    isNumber,
 };

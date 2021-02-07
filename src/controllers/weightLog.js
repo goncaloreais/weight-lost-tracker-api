@@ -1,5 +1,6 @@
 // import required dependencies
 const httpResponse = require('../utils/httpResponses');
+const validator = require('../models/WeightLog/validators');
 
 // imports required models
 const WeightLog = require('../models/WeightLog/WeightLog');
@@ -24,12 +25,10 @@ function get(req, res) {
 
 // creates a new WeightLog
 function post(req, res) {
-
-    // no weight was provided
-    if(!req.body.weight) {
-        res.status(422).send(
-            httpResponse.errorResponse(422, "The property 'weight' was not provided.")
-        );
+    
+    const error = validator.postHasErrors(req.body);
+    if(error) {
+        res.status(error.code).send(error);
 
         // ends the process
         return;
