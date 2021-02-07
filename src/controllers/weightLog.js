@@ -30,12 +30,12 @@ function post(req, res) {
         res.status(422).send(
             httpResponse.errorResponse(422, "The property 'weight' was not provided.")
         );
-
-        res.end();
     }
 
-    let weightLog = new WeightLog();
-    weightLog.weight = req.body.weight;
+    let weightLog = new WeightLog({
+        weight: req.body.weight,
+        datetime: 0
+    });
     
     WeightLog.create(weightLog, (err) => {
         if (err) {

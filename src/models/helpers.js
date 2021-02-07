@@ -1,7 +1,6 @@
 // inserts a timestamp in 'date' property of given entity
-function insertTimestamp(entity) {
-    const datetime = Date.new();
-    entity.date = datetime;
+function insertTimestamp() {
+    return Date.now();
 }
 
 // exports functions
