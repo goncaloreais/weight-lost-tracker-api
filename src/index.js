@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 // required imports
+const utils = require('./utils/httpResponses');
 const routes = require('./routes');
 
 // adds reference to secrets file when running locally
@@ -25,6 +26,17 @@ const db = mongoose.connection;
 if(!db) { 
     console.log("Error connecting to the db!"); 
 }
+
+// adds some security (temporary)
+app.use((req, res) => {
+    const header = process.env.production ? process.env.security_header : secrets.security_header;
+    if(req.headers.security !== header) {
+        res.status(401).send(utils.errorResponse(401, 'Unauthorized!'));
+        return;
+    }
+
+    req.next();
+})
 
 // routes usage
 app.use('/', routes);
