@@ -12,7 +12,7 @@ function postHasErrors(body) {
         return httpResponse.errorResponse(422, "The property 'weight' was not a Number.");
     }
 
-    return false;   
+    return false;
 }
 
 // exports functions
