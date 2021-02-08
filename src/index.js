@@ -7,7 +7,7 @@ const routes = require('./routes');
 
 // adds reference to secrets file when running locally
 let secrets = null;
-if(!process.env.ON_HEROKU) {
+if(!process.env.production) {
     secrets = require('../secrets.json');
 }
 
@@ -17,7 +17,7 @@ app.use(express.json());
 
 // db connection init
 mongoose.connect(
-    process.env.MONGO_DB_URI || 
+    process.env.mongo_uri || 
     secrets.mongo_uri, { useNewUrlParser: true, useUnifiedTopology: true }
 );
 
