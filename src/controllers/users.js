@@ -25,14 +25,6 @@ function get(req, res) {
 
 // creates a new User
 function post(req, res) {
-    
-    const error = validator.postHasErrors(req.body);
-    if(error) {
-        res.status(error.code).send(error);
-
-        // ends the process
-        return;
-    }
 
     let user = new User({
         name: req.body.name,
