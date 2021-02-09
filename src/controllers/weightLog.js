@@ -9,12 +9,14 @@ const WeightLog = require('../models/WeightLog/WeightLog');
 function get(req, res) {
     WeightLog.find((err, messages) => {
         if (err) {
+            // @TODO: review this
             res.json({
                 status: "error",
                 message: err,
             });
         }
         
+        // @TODO: review this
         res.json({
             status: "success",
             message: "WeightLogs retrieved successfully",
@@ -43,7 +45,8 @@ function post(req, res) {
         if (err) {
             res.json(err);
         }
-            
+        
+        // @TODO: review this
         else {
             res.json({
                 message: 'New WeightLog created!',
