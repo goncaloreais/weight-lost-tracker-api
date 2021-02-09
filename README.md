@@ -24,3 +24,8 @@ The idea is to become a better developer and create something useful to me.
 08/02/2021
 * made this readme.md file
 * added some rudimentary validation to the requests
+
+09/02/2021
+* made the users model
+* made the routes to manipulate it
+* added some comments for future work
