@@ -13,13 +13,12 @@ function post(req, res) {
             res.json('no_user');
             return;
         }
-        console.log(req.body.password);
-        console.log(user.password);
-        console.log(bcrypt.compareSync(req.body.password, user.password));
-    })
-    .catch(error => {
-        console.log('entrou')
-        res.json(error);
+
+        if(bcrypt.compareSync(req.body.password, user.password)) {
+            
+        } else {
+
+        }
     });
 };
 
