@@ -23,7 +23,6 @@ const UserSchema = mongoose.Schema({
     weightUnit: String,
     height: Number,
     sessionToken: String,
-    lastAccess: Number,
 });
 
 // @TODO: transfer this function to user validators
