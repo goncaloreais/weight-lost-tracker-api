@@ -4,6 +4,10 @@ const router = require('express').Router();
 // importing controllers
 const weightLogCtrl = require('./controllers/weightLog');
 const usersCtrl = require('./controllers/users');
+const authCtrl = require('./controllers/auth');
+
+router.route('/auth')
+    .post(authCtrl.post);
 
 // manipulating Log model
 // @TODO: change this route so it returns a user weight-logs 
