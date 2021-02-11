@@ -2,15 +2,14 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-
 // creating the schema
 const LoginSchema = mongoose.Schema({
     sessionToken: String,
+    lastAccess: Number,
     userId: {
         type: Schema.Types.ObjectId, 
         ref: 'User'
     }
-    
 });
 
 // creating the model
