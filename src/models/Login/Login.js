@@ -1,5 +1,7 @@
 // importing dependencies
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
 
 // creating the schema
 const LoginSchema = mongoose.Schema({
