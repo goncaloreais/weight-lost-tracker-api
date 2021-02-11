@@ -23,13 +23,17 @@ const UserSchema = mongoose.Schema({
     weightUnit: String,
     height: Number,
     sessionToken: String,
-    accessToken: String,
+    lastAccess: Number,
 });
 
 // @TODO: transfer this function to user validators
 UserSchema.pre('save', function(next) {
     const user = this;
-    user.password = bcrypt.hashSync(user.password);
+    
+    if(user.isModified("password")) {
+        user.password = bcrypt.hashSync(user.password);
+    }
+    
     next();
 });
 
