@@ -16,9 +16,7 @@ const UserSchema = mongoose.Schema({
     password: {
         type: String,
         required: true,
-        lowercase: true,
         minlength: 6,
-        trim: true,
     },
     initialWeight: Number,
     currentWeight: Number,
@@ -28,13 +26,10 @@ const UserSchema = mongoose.Schema({
     accessToken: String,
 });
 
-UserSchema.pre('save', async function(next) {
+// @TODO: transfer this function to user validators
+UserSchema.pre('save', function(next) {
     const user = this;
-    
-    if(user.isModified('password')) {
-        user.password = await bcrypt.hash(user.password, 8);
-    }
-    
+    user.password = bcrypt.hashSync(user.password);
     next();
 });
 
