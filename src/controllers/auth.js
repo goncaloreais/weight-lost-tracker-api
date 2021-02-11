@@ -5,6 +5,7 @@ const httpResponse = require('../utils/httpResponses');
 
 // imports required models
 const User = require('../models/User/User');
+const Login = require('../models/Login/Login');
 
 // login request
 function post(req, res) {
@@ -18,20 +19,32 @@ function post(req, res) {
         console.log('ecgou aqui: ', req.body.password, user.password);
         if(bcrypt.compareSync(req.body.password, user.password)) {
             user.sessionToken = tokenGenerator.token();
-            user.lastAccess = Date.now();
             
             // @TODO: handle error
             user.save((err, newUser) => {
                 // @TODO: review this
-                
-                // removes sensible info from response
-                delete newUser.password;
-                delete newUser.__v;
-                delete newUser._id;
 
-                res.status(200).send(
-                    httpResponse.successResponse(200, 'User authenticated!', newUser)
-                );
+                let login = new Login({
+                    sessionToken: newUser.sessionToken,
+                    lastAccess: Date.now(),
+                    userId: newUser._id,
+                });
+                    
+                Login.create(login, (err) => {
+                    if (err) {
+                        // @TODO: handle error 
+                        res.json(err);
+                    } else {
+                        // removes sensible info from response
+                        delete newUser.password;
+                        delete newUser.__v;
+                        delete newUser._id;
+
+                        res.status(200).send(
+                            httpResponse.successResponse(200, 'User authenticated!', newUser)
+                        );
+                    }
+                });
             })
         } else {
             res.status(401).send(
