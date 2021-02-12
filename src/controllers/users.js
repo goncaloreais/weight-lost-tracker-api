@@ -29,6 +29,8 @@ function post(req, res) {
     let user = new User({
         name: req.body.name,
         surname: req.body.surname,
+        username: req.body.username,
+        password: req.body.password,
         initialWeight: req.body.initialWeight,
         weightUnit: req.body.weightUnit,
         height: req.body.height,

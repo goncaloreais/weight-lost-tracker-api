@@ -29,3 +29,13 @@ The idea is to become a better developer and create something useful to me.
 * made the users model
 * made the routes to manipulate it
 * added some comments for future work
+
+10/02/2021
+* added username and password fields to User
+* added bcrypt as dependency and used it to hash password
+
+11/02/2021
+* added the Login model, that will save active sessions
+* added a route to login
+* made a simple auth system based on tokens
+* added logic for tokens to expire
