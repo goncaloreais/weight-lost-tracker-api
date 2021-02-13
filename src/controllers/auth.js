@@ -4,10 +4,10 @@ const tokenGenerator = require('../utils/tokenGenerator');
 const httpResponse = require('../utils/httpResponses');
 
 // imports required models
-const User = require('../models/User/User');
-const Login = require('../models/Login/Login');
+const User = require('../models/Weight/User');
+const Session = require('../models/Auth/Session');
 
-// login request
+// session request
 function post(req, res) {
     User.findOne({ username: req.body.username }, (error, user) => {
         if(!user) {
@@ -27,14 +27,14 @@ function post(req, res) {
                 // @TODO: review this
 
                 // since a new token is generated, the session must be updated or created
-                let login = new Login({
+                let session = new Session({
                     sessionToken: newUser.sessionToken,
                     lastAccess: Date.now(),
                     userId: newUser._id,
                 });
                 
 
-                Login.findOne({ userId: newUser._id }, (sessionError, sesssion) => {
+                Session.findOne({ userId: newUser._id }, (sessionError, sesssion) => {
                     // removes sensible info from response
                     delete newUser.password;
                     delete newUser.__v;
@@ -46,15 +46,15 @@ function post(req, res) {
                     } else {
                         // if there is no session, creates one
                         if(!sesssion) {
-                            Login.create(login, (newSessionError, newSession) => {
+                            Session.create(session, (newSessionError, newSession) => {
                                 res.status(200).send(
                                     httpResponse.successResponse(200, 'User authenticated!', newUser)
                                 );
                             })
                         } else {
                             // if there is one, updates it
-                            sesssion.sessionToken = login.sessionToken;
-                            sesssion.lastAccess = login.lastAccess;
+                            sesssion.sessionToken = session.sessionToken;
+                            sesssion.lastAccess = session.lastAccess;
 
                             sesssion.save((newSessionError, newSession) => {
                                 res.status(200).send(

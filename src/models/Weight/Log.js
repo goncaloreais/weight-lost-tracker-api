@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const helpers = require('../helpers');
 
 // creating the schema
-const WeightLogSchema = mongoose.Schema({
+const LogSchema = mongoose.Schema({
     datetime: {
         type: Number,
         set: helpers.insertTimestamp
@@ -12,9 +12,9 @@ const WeightLogSchema = mongoose.Schema({
 });
 
 // creating the model
-const WeightLog = mongoose.model('weight-log', WeightLogSchema);
+const Log = mongoose.model('weight-log', LogSchema);
 
 // @TODO: check this: https://stackoverflow.com/questions/17808739/nodejs-mongo-mongoose-dynamic-collection-name
 
 // exporting
-module.exports = WeightLog;
+module.exports = Log;

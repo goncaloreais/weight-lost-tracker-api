@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 // required imports
 const utils = require('./utils/httpResponses');
 const routes = require('./routes');
-const Login = require('./models/Login/Login');
+const Session = require('./models/Auth/Session');
 
 // adds reference to secrets file when running locally
 let secrets = null;
@@ -43,7 +43,7 @@ app.use((req, res) => {
             return;
         }
 
-        Login.findOne({ sessionToken: req.query.token }, (error, session) => {
+        Session.findOne({ sessionToken: req.query.token }, (error, session) => {
             // if the request token is not found
             if(!session) {
                 res.status(401).send(utils.errorResponse(401, 'Unauthorized!'));

@@ -1,13 +1,13 @@
 // import required dependencies
 const httpResponse = require('../utils/httpResponses');
-const validator = require('../models/WeightLog/validators');
+const validator = require('../models/Weight/validators');
 
 // imports required models
-const WeightLog = require('../models/WeightLog/WeightLog');
+const Log = require('../models/Weight/Log');
 
-// gets every WeightLog
+// gets every Log
 function get(req, res) {
-    WeightLog.find((err, messages) => {
+    Log.find((err, messages) => {
         if (err) {
             // @TODO: review this
             res.json({
@@ -19,13 +19,13 @@ function get(req, res) {
         // @TODO: review this
         res.json({
             status: "success",
-            message: "WeightLogs retrieved successfully",
+            message: "Logs retrieved successfully",
             data: messages
         });
     });
 };
 
-// creates a new WeightLog
+// creates a new Log
 function post(req, res) {
     
     const error = validator.postHasErrors(req.body);
@@ -36,12 +36,12 @@ function post(req, res) {
         return;
     }
 
-    let weightLog = new WeightLog({
+    let log = new Log({
         weight: req.body.weight,
         datetime: 0
     });
     
-    WeightLog.create(weightLog, (err) => {
+    Log.create(log, (err) => {
         if (err) {
             res.json(err);
         }
@@ -49,8 +49,8 @@ function post(req, res) {
         // @TODO: review this
         else {
             res.json({
-                message: 'New WeightLog created!',
-                data: weightLog
+                message: 'New Log created!',
+                data: log
             });
         }  
     });

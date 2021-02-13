@@ -1,7 +1,7 @@
 const helpers = require('../helpers');
 const httpResponse = require('../../utils/httpResponses');
 
-// validates payload of WeightLog post, returning errors
+// validates payload of Log post, returning errors
 function postHasErrors(body) {
     // no weight was provided
     if(!body.weight) {
