@@ -7,6 +7,41 @@ const httpResponse = require('../utils/httpResponses');
 const User = require('../models/Weight/User');
 const Session = require('../models/Auth/Session');
 
+// token validation
+function validateToken(req, res) {
+    // /auth is the only request that do not requires a token
+    if(req.originalUrl !== '/auth') {
+
+        // if there is no token in the request
+        if(!req.query.token) {
+            res.status(401).send(utils.errorResponse(401, 'Unauthorized!'));
+            return;
+        }
+
+        Session.findOne({ sessionToken: req.query.token }, (error, session) => {
+            // if the request token is not found
+            if(!session) {
+                res.status(401).send(utils.errorResponse(401, 'Unauthorized!'));
+                return;
+            }
+
+            // if the token is found but it's expired
+            if(Date.now() - session.lastAccess >= tokenExpiration) {
+                res.status(401).send(utils.errorResponse(401, 'Session expired!'));
+                return;
+            }
+
+            // if the token is found and is not expired
+            session.lastAccess = Date.now();
+            session.save((error, newSession) => {
+                req.next();
+            });
+        });
+    } else {
+        req.next();
+    }
+}
+
 // session request
 function post(req, res) {
     User.findOne({ username: req.body.username }, (error, user) => {
@@ -74,4 +109,4 @@ function post(req, res) {
     });
 };
 
-module.exports = { post };
+module.exports = { post, validateToken };
