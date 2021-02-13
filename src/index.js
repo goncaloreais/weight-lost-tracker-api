@@ -12,10 +12,6 @@ if(!process.env.production) {
     secrets = require('../secrets.json');
 }
 
-// global vars for app
-// 30 min * 60 secs * 1000 ms
-const tokenExpiration = 30 * 60 * 1000;
-
 // app init
 const app = express();
 app.use(express.json());

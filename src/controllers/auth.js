@@ -7,6 +7,9 @@ const httpResponse = require('../utils/httpResponses');
 const User = require('../models/Weight/User');
 const Session = require('../models/Auth/Session');
 
+// 30 min * 60 secs * 1000 ms
+const tokenExpiration = 30 * 60 * 1000;
+
 // token validation
 function validateToken(req, res) {
     // /auth is the only request that do not requires a token
