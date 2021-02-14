@@ -11,10 +11,11 @@ const LogSchema = mongoose.Schema({
     weight: Number
 });
 
-// creating the model
-const Log = mongoose.model('weight-log', LogSchema);
-
-// @TODO: check this: https://stackoverflow.com/questions/17808739/nodejs-mongo-mongoose-dynamic-collection-name
+// function that receives userId to create Log collection
+function LogCollectionFactory(userId) {
+    // creating the model
+    return mongoose.model('log-' + userId, LogSchema);
+}
 
 // exporting
-module.exports = Log;
+module.exports = LogCollectionFactory;
