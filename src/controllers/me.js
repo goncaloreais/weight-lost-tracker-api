@@ -1,31 +1,26 @@
 // import required dependencies
 const httpResponse = require('../utils/httpResponses');
+const userQueries = require('../queries/users');
 
 // imports required models
 const User = require('../models/Data/User');
 const LogCollectionFactory = require('../models/Data/Log');
 
 // returns the initial weight
-function initialWeight(req, res) {
-    User.findOne({_id: req.userId }, (err, user) => {
-        if (err) {
-            // @TODO: review this
-            res.json({
-                status: "error",
-                message: err,
-            });
-        }
-        
-        const responseBody = {
-            weight: user.initialWeight,
-            unit: user.weightUnit,
-            parsedWeight: user.initialWeight + user.weightUnit,
-        };
+async function initialWeight(req, res) {
+    const user = await userQueries.getUser(req.userId).exec();
+    
+    // @TODO: add validation
 
-        res.status(200).send(
-            httpResponse.successResponse(200, "Initial weight sucessfully fetch", responseBody)
-        );
-    });
+    const responseBody = {
+        weight: user.initialWeight,
+        unit: user.weightUnit,
+        parsedWeight: user.initialWeight + user.weightUnit,
+    };
+
+    res.status(200).send(
+        httpResponse.successResponse(200, "Initial weight sucessfully fetch", responseBody)
+    );
 };
 
 // returns the total difference
@@ -69,13 +64,11 @@ function totalDifference(req, res) {
 // returns if the daily log has been made, returning the last one of the day
 function dailyLog(req, res) {
     const Logs = LogCollectionFactory(req.userId);
-    const initialDate = new Date().setHours(0,0,0,0);
-    const finalDate = new Date().setHours(23,59,59,999);
+    const initialDate = new Date().setHours(0, 0, 0, 0);
 
     Logs.find({})
         .where('datetime')
         .gte(initialDate)
-        .lte(finalDate)
         .sort({datetime: 'desc'})
         .exec((logError, logs) => {
             
