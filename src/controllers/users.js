@@ -44,19 +44,24 @@ async function getAdmin(req, res) {
 };
 
 async function setAdmin(req, res) {
-    const user = await usersQueries.getUserById(req.params.userId);
-    user.role = 'admin';
-
-    // create
-    console.log(user);
-
-    user.save((userError, updatedUser) => {
-        res.json({
-            status: "success",
-            message: "User successfully set to admin!",
-            data: updatedUser
+    const requestUser = await usersQueries.getUserById(req.userId);
+    if(requestUser.role === 'admin') {
+        const user = await usersQueries.getUserById(req.params.userId);
+        user.role = 'admin';
+    
+        user.save((userError, updatedUser) => {
+            res.json({
+                status: "success",
+                message: "User successfully set to admin!",
+                data: updatedUser
+            });
         });
-    });
+    } else {
+        res.json({
+            status: "error",
+            message: "You do not have permissions to set a user to admin!",
+        });
+    }
 };
 
 module.exports = { 
