@@ -80,10 +80,10 @@ async function post(req, res) {
                 );
             } else {
                 // if there is one, updates it
-                newSession.sessionToken = session.sessionToken;
-                newSession.lastAccess = session.lastAccess;
+                session.sessionToken = newSession.sessionToken;
+                session.lastAccess = newSession.lastAccess;
 
-                newSession.save(() => {
+                session.save(() => {
                     res.status(200).send(
                         httpResponse.successResponse(200, 'User authenticated!', newUser)
                     );

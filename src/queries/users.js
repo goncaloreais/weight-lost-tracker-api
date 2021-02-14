@@ -4,6 +4,11 @@ const User = require('../models/Data/User');
 // gets every user
 function getUsers() {
     return User.find().exec();
+};
+
+// gets every user that is an admin
+function getAdmin() {
+    return User.find({role: 'admin'}).exec();
 }
 
 // gets user by id
@@ -23,7 +28,8 @@ function createUser(user) {
 
 module.exports = {
     getUsers,
+    getAdmin,
     getUserById,
     getUserByUsername,
-    createUser
+    createUser,
 };

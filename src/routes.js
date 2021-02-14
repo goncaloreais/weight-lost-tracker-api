@@ -21,10 +21,13 @@ router.route('/me/initialWeight').get(meCtrl.initialWeight);
 router.route('/me/actualDifference').get(meCtrl.totalDifference);
 router.route('/me/dailyDifference').get(meCtrl.dailyDifference);
 
-
+// manipulating users
 router.route('/users')
     .get(usersCtrl.get)
     .post(usersCtrl.post);
+
+router.route('/users/admin').get(usersCtrl.getAdmin)
+router.route('/users/admin/:userId').post(usersCtrl.setAdmin);
 
 // exports routes
 module.exports = router;

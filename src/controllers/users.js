@@ -33,4 +33,35 @@ async function post(req, res) {
     }); 
 };
 
-module.exports = { get, post };
+async function getAdmin(req, res) {
+    const admins = await usersQueries.getAdmin();
+    
+    res.json({
+        status: "success",
+        message: "Admin users retrieved successfully",
+        data: admins
+    });
+};
+
+async function setAdmin(req, res) {
+    const user = await usersQueries.getUserById(req.params.userId);
+    user.role = 'admin';
+
+    // create
+    console.log(user);
+
+    user.save((userError, updatedUser) => {
+        res.json({
+            status: "success",
+            message: "User successfully set to admin!",
+            data: updatedUser
+        });
+    });
+};
+
+module.exports = { 
+    get,
+    post,
+    getAdmin,
+    setAdmin,
+};
