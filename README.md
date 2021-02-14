@@ -49,3 +49,9 @@ The idea is to become a better developer and create something useful to me.
 * added logic to have a collection of Logs per user
 * added routes to get some statistics
 * added a query folder to aggregate every query
+
+14/02/2021
+* added more queries to abstract its logic
+* added a "role" property to users
+* added logic to update the current weight
+* added different databases for staging and production
