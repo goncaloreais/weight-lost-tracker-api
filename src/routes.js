@@ -15,9 +15,9 @@ router.route('/logs')
     .get(logsCtrl.get)
     .post(logsCtrl.post);
 
-// getting info
-router.route('/me/initialWeight')
-    .get(meCtrl.initialWeight);
+// getting info (/me routes)
+router.route('/me/initialWeight').get(meCtrl.initialWeight);
+router.route('/me/actualDifference').get(meCtrl.totalDifference);
 
 
 router.route('/users')
