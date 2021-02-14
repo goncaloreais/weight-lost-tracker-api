@@ -1,9 +1,9 @@
 // import required dependencies
 const httpResponse = require('../utils/httpResponses');
-const validator = require('../models/Weight/validators');
+const validator = require('../models/Data/validators');
 
 // imports required models
-const LogCollectionFactory = require('../models/Weight/Log');
+const LogCollectionFactory = require('../models/Data/Log');
 
 // gets every Log
 function get(req, res) {

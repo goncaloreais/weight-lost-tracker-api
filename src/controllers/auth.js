@@ -4,7 +4,7 @@ const tokenGenerator = require('../utils/tokenGenerator');
 const httpResponse = require('../utils/httpResponses');
 
 // imports required models
-const User = require('../models/Weight/User');
+const User = require('../models/Data/User');
 const Session = require('../models/Auth/Session');
 
 // 30 min * 60 secs * 1000 ms

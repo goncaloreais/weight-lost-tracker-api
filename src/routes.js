@@ -10,10 +10,14 @@ router.route('/auth')
     .post(authCtrl.post);
 
 // manipulating Log model
-// @TODO: change this route so it returns a user weight-logs 
 router.route('/logs')
     .get(logsCtrl.get)
     .post(logsCtrl.post);
+
+// getting info
+router.route('/me/initialWeight')
+    .get(logsCtrl.get);
+
 
 router.route('/users')
     .get(usersCtrl.get)

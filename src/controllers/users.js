@@ -1,7 +1,7 @@
 // import required dependencies
 
 // imports required models
-const User = require('../models/Weight/User');
+const User = require('../models/Data/User');
 
 // gets every User
 function get(req, res) {
