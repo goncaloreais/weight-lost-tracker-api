@@ -1,5 +1,8 @@
 // import required dependencies
 const httpResponse = require('../utils/httpResponses');
+const weightDifference = require('../utils/weightDifference');
+
+// import required queries
 const userQueries = require('../queries/users');
 const logsQueries = require('../queries/logs');
 
@@ -42,8 +45,7 @@ function totalDifference(req, res) {
         Logs.findOne({}).sort({datetime: 'desc'}).exec((logError, log) => {
             // @TODO: make validation
 
-            let currentDifference = (initialWeight - log.weight) * -1;
-            currentDifference = Math.round((currentDifference + Number.EPSILON) * 100) / 100;
+            let currentDifference = weightDifference.calculate(initialWeight - log.weight);
 
             const responseBody = {
                 initialWeight: initialWeight,
@@ -92,8 +94,64 @@ async function dailyLog(req, res) {
     );
 };
 
+async function dailyDifference(req, res) {
+    const todayInitialDate = new Date().setHours(0, 0, 0, 0);
+    const yesterdayInitialDate = new Date(new Date().setDate(new Date().getDate() - 1)).setHours(0, 0, 0, 0);
+    const yesterdayFinallDate = new Date(new Date().setDate(new Date().getDate() - 1)).setHours(23, 59, 59, 999);
+    
+    const user = await userQueries.getUser(req.userId).exec();
+    const todayLogs = await logsQueries.getLogs(req.userId, todayInitialDate, null, 'desc').exec();
+    const yesterdayLogs = await logsQueries.getLogs(req.userId, yesterdayInitialDate, yesterdayFinallDate, 'desc').exec();
+
+    if(yesterdayLogs.length === 0) {
+        const responseBody = {
+            yesterdayLog: false,
+            todayLog: false,
+            difference: null,
+            unit: user.weightUnit
+        };
+
+        res.status(200).send(
+            httpResponse.successResponse(404, "There were no logs made yesterday!", responseBody)
+        );
+
+        return;
+    }
+
+    if(todayLogs.length === 0) {
+        const responseBody = {
+            yesterdayLog: true,
+            todayLog: false,
+            difference: null,
+            unit: user.weightUnit
+        };
+
+        res.status(200).send(
+            httpResponse.successResponse(404, "There are no logs made today!", responseBody)
+        );
+
+        return;
+    }
+
+    const difference = weightDifference.calculate(yesterdayLogs[0].weight, todayLogs[0].weight);
+    const responseBody = {
+        yesterdayLog: true,
+        todayLog: true,
+        difference: difference,
+        unit: user.weightUnit,
+        parsedWeight: difference + user.weightUnit,
+        status: difference >= 0 ? 'gaining' : 'losing',
+    };
+
+    res.status(200).send(
+        httpResponse.successResponse(200, "The daily difference was calculated!", responseBody)
+    );
+
+};
+
 module.exports = { 
     initialWeight,
     totalDifference,
-    dailyLog
+    dailyLog,
+    dailyDifference,
 };
