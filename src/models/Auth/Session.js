@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 // creating the schema
-const LoginSchema = mongoose.Schema({
+const SessionSchema = mongoose.Schema({
     sessionToken: String,
     lastAccess: Number,
     userId: {
@@ -13,7 +13,7 @@ const LoginSchema = mongoose.Schema({
 });
 
 // creating the model
-const Login = mongoose.model('login', LoginSchema);
+const Session = mongoose.model('session', SessionSchema);
 
 // exporting
-module.exports = Login;
+module.exports = Session;

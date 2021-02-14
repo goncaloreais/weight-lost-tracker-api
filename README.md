@@ -39,3 +39,19 @@ The idea is to become a better developer and create something useful to me.
 * added a route to login
 * made a simple auth system based on tokens
 * added logic for tokens to expire
+
+12/02/2021
+* well... 👀
+
+13/02/2021
+* renamed a lot of files for a better naming convention
+* made Log model name dynamic
+* added logic to have a collection of Logs per user
+* added routes to get some statistics
+* added a query folder to aggregate every query
+
+14/02/2021
+* added more queries to abstract its logic
+* added a "role" property to users
+* added logic to update the current weight
+* added different databases for staging and production

@@ -1,32 +1,22 @@
-// import required dependencies
-
-// imports required models
-const User = require('../models/User/User');
+// imports required queries
+const usersQueries = require('../queries/users');
 
 // gets every User
-function get(req, res) {
-    User.find((err, messages) => {
-        if (err) {
-            // @TODO: review this
-            res.json({
-                status: "error",
-                message: err,
-            });
-        }
-        
-        // @TODO: review this
-        res.json({
-            status: "success",
-            message: "Users retrieved successfully",
-            data: messages
-        });
+async function get(req, res) {
+    // @TODO: adds validation
+    const users = await usersQueries.getUsers();
+    
+    res.json({
+        status: "success",
+        message: "Users retrieved successfully",
+        data: users
     });
 };
 
 // creates a new User
-function post(req, res) {
+async function post(req, res) {
 
-    let user = new User({
+    let user = {
         name: req.body.name,
         surname: req.body.surname,
         username: req.body.username,
@@ -34,21 +24,49 @@ function post(req, res) {
         initialWeight: req.body.initialWeight,
         weightUnit: req.body.weightUnit,
         height: req.body.height,
-    });
+    };
+
+    const newUser = await usersQueries.createUser(user);
+    res.json({
+        message: 'New User created!',
+        data: newUser
+    }); 
+};
+
+async function getAdmin(req, res) {
+    const admins = await usersQueries.getAdmin();
     
-    User.create(user, (err) => {
-        if (err) {
-            res.json(err);
-        }
-        
-        // @TODO: review this
-        else {
-            res.json({
-                message: 'New User created!',
-                data: user
-            });
-        }  
+    res.json({
+        status: "success",
+        message: "Admin users retrieved successfully",
+        data: admins
     });
 };
 
-module.exports = { get, post };
+async function setAdmin(req, res) {
+    const requestUser = await usersQueries.getUserById(req.userId);
+    if(requestUser.role === 'admin') {
+        const user = await usersQueries.getUserById(req.params.userId);
+        user.role = 'admin';
+    
+        user.save((userError, updatedUser) => {
+            res.json({
+                status: "success",
+                message: "User successfully set to admin!",
+                data: updatedUser
+            });
+        });
+    } else {
+        res.json({
+            status: "error",
+            message: "You do not have permissions to set a user to admin!",
+        });
+    }
+};
+
+module.exports = { 
+    get,
+    post,
+    getAdmin,
+    setAdmin,
+};
