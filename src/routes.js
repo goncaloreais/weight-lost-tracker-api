@@ -16,9 +16,10 @@ router.route('/logs')
     .post(logsCtrl.post);
 
 // getting info (/me routes)
+router.route('/me/dailyLog').get(meCtrl.dailyLog);
 router.route('/me/initialWeight').get(meCtrl.initialWeight);
 router.route('/me/actualDifference').get(meCtrl.totalDifference);
-router.route('/me/dailyLog').get(meCtrl.dailyLog);
+// router.route('/me/dailyDifference').get(meCtrl.dailyDifference);
 
 
 router.route('/users')

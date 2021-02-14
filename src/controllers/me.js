@@ -1,6 +1,7 @@
 // import required dependencies
 const httpResponse = require('../utils/httpResponses');
 const userQueries = require('../queries/users');
+const logsQueries = require('../queries/logs');
 
 // imports required models
 const User = require('../models/Data/User');
@@ -62,40 +63,32 @@ function totalDifference(req, res) {
 };
 
 // returns if the daily log has been made, returning the last one of the day
-function dailyLog(req, res) {
-    const Logs = LogCollectionFactory(req.userId);
+async function dailyLog(req, res) {
     const initialDate = new Date().setHours(0, 0, 0, 0);
+    const logs = await logsQueries.getLogs(req.userId, initialDate, null, 'desc').exec();
 
-    Logs.find({})
-        .where('datetime')
-        .gte(initialDate)
-        .sort({datetime: 'desc'})
-        .exec((logError, logs) => {
-            
-            if(logs.length === 0) {
-                const responseBody = {
-                    lastLog: false,
-                    total: 0,
-                    dailyLog: false,
-                };
+    if(logs.length === 0) {
+        const responseBody = {
+            lastLog: false,
+            total: 0,
+            dailyLog: false,
+        };
 
-                res.status(200).send(
-                    httpResponse.successResponse(404, "No logs were added today!", responseBody)
-                );
+        res.status(200).send(
+            httpResponse.successResponse(404, "No logs were added today!", responseBody)
+        );
 
-                return;
-            }
-            
-            const responseBody = {
-                lastLog: logs[0],
-                total: logs.length,
-                dailyLog: true,
-            };
-            
-            res.status(200).send(
-                httpResponse.successResponse(200, "There are logs for toady!", responseBody)
-            );
-        }
+        return;
+    }
+    
+    const responseBody = {
+        lastLog: logs[0],
+        total: logs.length,
+        dailyLog: true,
+    };
+    
+    res.status(200).send(
+        httpResponse.successResponse(200, "There are logs for toady!", responseBody)
     );
 };
 
