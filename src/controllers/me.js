@@ -1,13 +1,12 @@
 // import required dependencies
+const httpResponse = require('../utils/httpResponses');
 
 // imports required models
-const User = require('../models/User/');
+const User = require('../models/Data/User');
 
-// gets every Log
-function get(req, res) {
-    const Log = LogCollectionFactory(req.userId);
-
-    Log.find((err, messages) => {
+// returns the initial weight
+function initialWeight(req, res) {
+    User.findOne({_id: req.userId }, (err, user) => {
         if (err) {
             // @TODO: review this
             res.json({
@@ -16,13 +15,16 @@ function get(req, res) {
             });
         }
         
-        // @TODO: review this
-        res.json({
-            status: "success",
-            message: "Logs retrieved successfully",
-            data: messages
-        });
+        const responseBody = {
+            weight: user.initialWeight,
+            unit: user.weightUnit,
+            parsedWeight: user.initialWeight + user.weightUnit,
+        };
+
+        res.status(200).send(
+            httpResponse.successResponse(200, "Initial weight sucessfully fetch", responseBody)
+        );
     });
 };
 
-module.exports = { get, post };
+module.exports = { initialWeight };

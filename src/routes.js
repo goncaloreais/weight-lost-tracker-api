@@ -5,6 +5,7 @@ const router = require('express').Router();
 const logsCtrl = require('./controllers/logs');
 const usersCtrl = require('./controllers/users');
 const authCtrl = require('./controllers/auth');
+const meCtrl = require('./controllers/me');
 
 router.route('/auth')
     .post(authCtrl.post);
@@ -16,7 +17,7 @@ router.route('/logs')
 
 // getting info
 router.route('/me/initialWeight')
-    .get(logsCtrl.get);
+    .get(meCtrl.initialWeight);
 
 
 router.route('/users')
