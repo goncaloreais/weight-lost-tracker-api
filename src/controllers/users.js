@@ -16,7 +16,7 @@ async function get(req, res) {
 // creates a new User
 async function post(req, res) {
 
-    let user = new User({
+    let user = {
         name: req.body.name,
         surname: req.body.surname,
         username: req.body.username,
@@ -24,7 +24,7 @@ async function post(req, res) {
         initialWeight: req.body.initialWeight,
         weightUnit: req.body.weightUnit,
         height: req.body.height,
-    });
+    };
 
     const newUser = await usersQueries.createUser(user);
     res.json({
