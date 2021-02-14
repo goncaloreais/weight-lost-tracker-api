@@ -3,10 +3,12 @@ const httpResponse = require('../utils/httpResponses');
 const validator = require('../models/Weight/validators');
 
 // imports required models
-const Log = require('../models/Weight/Log');
+const LogCollectionFactory = require('../models/Weight/Log');
 
 // gets every Log
 function get(req, res) {
+    const Log = LogCollectionFactory(req.userId);
+
     Log.find((err, messages) => {
         if (err) {
             // @TODO: review this
@@ -36,6 +38,8 @@ function post(req, res) {
         return;
     }
 
+    const Log = LogCollectionFactory(req.userId);
+    
     let log = new Log({
         weight: req.body.weight,
         datetime: 0
