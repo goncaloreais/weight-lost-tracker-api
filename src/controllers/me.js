@@ -28,6 +28,7 @@ function initialWeight(req, res) {
     });
 };
 
+// returns the total difference
 function totalDifference(req, res) {
     User.findOne({_id: req.userId }, (userError, user) => {
         if (userError) {
@@ -65,7 +66,48 @@ function totalDifference(req, res) {
     });
 };
 
+// returns if the daily log has been made, returning the last one of the day
+function dailyLog(req, res) {
+    const Logs = LogCollectionFactory(req.userId);
+    const initialDate = new Date().setHours(0,0,0,0);
+    const finalDate = new Date().setHours(23,59,59,999);
+
+    Logs.find({})
+        .where('datetime')
+        .gte(initialDate)
+        .lte(finalDate)
+        .sort({datetime: 'desc'})
+        .exec((logError, logs) => {
+            
+            if(logs.length === 0) {
+                const responseBody = {
+                    lastLog: false,
+                    total: 0,
+                    dailyLog: false,
+                };
+
+                res.status(200).send(
+                    httpResponse.successResponse(404, "No logs were added today!", responseBody)
+                );
+
+                return;
+            }
+            
+            const responseBody = {
+                lastLog: logs[0],
+                total: logs.length,
+                dailyLog: true,
+            };
+            
+            res.status(200).send(
+                httpResponse.successResponse(200, "There are logs for toady!", responseBody)
+            );
+        }
+    );
+};
+
 module.exports = { 
     initialWeight,
-    totalDifference
+    totalDifference,
+    dailyLog
 };
