@@ -2,34 +2,23 @@
 const httpResponse = require('../utils/httpResponses');
 const validator = require('../models/Data/validators');
 
-// imports required models
-const LogCollectionFactory = require('../models/Data/Log');
+// imports required queries
+const logsQueries = require('../queries/logs');
 
 // gets every Log
-function get(req, res) {
-    const Log = LogCollectionFactory(req.userId);
+async function get(req, res) {
+    const logs = await logsQueries.getLogs(req.userId, null, null, 'desc');
 
-    Log.find((err, messages) => {
-        if (err) {
-            // @TODO: review this
-            res.json({
-                status: "error",
-                message: err,
-            });
-        }
-        
-        // @TODO: review this
-        res.json({
-            status: "success",
-            message: "Logs retrieved successfully",
-            data: messages
-        });
+    // @TODO: review this
+    res.json({
+        status: "success",
+        message: "Logs retrieved successfully",
+        data: logs
     });
 };
 
 // creates a new Log
-function post(req, res) {
-    
+async function post(req, res) {
     const error = validator.postHasErrors(req.body);
     if(error) {
         res.status(error.code).send(error);
@@ -37,26 +26,17 @@ function post(req, res) {
         // ends the process
         return;
     }
-
-    const Log = LogCollectionFactory(req.userId);
     
-    let log = new Log({
+    let log = {
         weight: req.body.weight,
         datetime: req.body.datetime || Date.now(),
-    });
+    };
     
-    Log.create(log, (err) => {
-        if (err) {
-            res.json(err);
-        }
-        
-        // @TODO: review this
-        else {
-            res.json({
-                message: 'New Log created!',
-                data: log
-            });
-        }  
+    const newLog = await logsQueries.createLog(req.userId, log);
+    
+    res.json({
+        message: 'New Log created!',
+        data: newLog
     });
 };
 

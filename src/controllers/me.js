@@ -6,13 +6,9 @@ const weightDifference = require('../utils/weightDifference');
 const userQueries = require('../queries/users');
 const logsQueries = require('../queries/logs');
 
-// imports required models
-const User = require('../models/Data/User');
-const LogCollectionFactory = require('../models/Data/Log');
-
 // returns the initial weight
 async function initialWeight(req, res) {
-    const user = await userQueries.getUser(req.userId).exec();
+    const user = await userQueries.getUserById(req.userId);
     
     // @TODO: add validation
 
@@ -28,46 +24,35 @@ async function initialWeight(req, res) {
 };
 
 // returns the total difference
-function totalDifference(req, res) {
-    User.findOne({_id: req.userId }, (userError, user) => {
-        if (userError) {
-            // @TODO: review this
-            res.json({
-                status: "error",
-                message: err,
-            });
-        }
+async function totalDifference(req, res) {
+    const user = await userQueries.getUserById(req.userId);
 
-        const initialWeight = user.initialWeight;
-        const Logs = LogCollectionFactory(req.userId);
+    const initialWeight = user.initialWeight;
 
-        // finds the last existing log
-        Logs.findOne({}).sort({datetime: 'desc'}).exec((logError, log) => {
-            // @TODO: make validation
+    // @TODO: make validation
+    const log = logsQueries.getLastLog(req.userId);
+    
+    let currentDifference = weightDifference.calculate(initialWeight - log.weight);
 
-            let currentDifference = weightDifference.calculate(initialWeight - log.weight);
+    const responseBody = {
+        initialWeight: initialWeight,
+        lastRecordedWeight: log.weight,
+        lastRecordDate: log.datetime,
+        difference: currentDifference,
+        unit: user.weightUnit,
+        parsedWeight: currentDifference + user.weightUnit,
+        status: currentDifference >= 0 ? 'gaining' : 'losing',
+    };
 
-            const responseBody = {
-                initialWeight: initialWeight,
-                lastRecordedWeight: log.weight,
-                lastRecordDate: log.datetime,
-                difference: currentDifference,
-                unit: user.weightUnit,
-                parsedWeight: currentDifference + user.weightUnit,
-                status: currentDifference >= 0 ? 'gaining' : 'losing',
-            };
-
-            res.status(200).send(
-                httpResponse.successResponse(200, "Total weight difference sucessfully fetch", responseBody)
-            );
-        })
-    });
+    res.status(200).send(
+        httpResponse.successResponse(200, "Total weight difference sucessfully fetch", responseBody)
+    );
 };
 
 // returns if the daily log has been made, returning the last one of the day
 async function dailyLog(req, res) {
     const initialDate = new Date().setHours(0, 0, 0, 0);
-    const logs = await logsQueries.getLogs(req.userId, initialDate, null, 'desc').exec();
+    const logs = await logsQueries.getLogs(req.userId, initialDate, null, 'desc');
 
     if(logs.length === 0) {
         const responseBody = {
@@ -99,9 +84,9 @@ async function dailyDifference(req, res) {
     const yesterdayInitialDate = new Date(new Date().setDate(new Date().getDate() - 1)).setHours(0, 0, 0, 0);
     const yesterdayFinallDate = new Date(new Date().setDate(new Date().getDate() - 1)).setHours(23, 59, 59, 999);
     
-    const user = await userQueries.getUser(req.userId).exec();
-    const todayLogs = await logsQueries.getLogs(req.userId, todayInitialDate, null, 'desc').exec();
-    const yesterdayLogs = await logsQueries.getLogs(req.userId, yesterdayInitialDate, yesterdayFinallDate, 'desc').exec();
+    const user = await userQueries.getUserById(req.userId);
+    const todayLogs = await logsQueries.getLogs(req.userId, todayInitialDate, null, 'desc');
+    const yesterdayLogs = await logsQueries.getLogs(req.userId, yesterdayInitialDate, yesterdayFinallDate, 'desc');
 
     if(yesterdayLogs.length === 0) {
         const responseBody = {

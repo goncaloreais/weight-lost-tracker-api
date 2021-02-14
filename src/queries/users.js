@@ -2,8 +2,15 @@
 const User = require('../models/Data/User');
 
 // gets every User
-function getUser(userId) {
-    return User.findById(userId);
+function getUserById(userId) {
+    return User.findById(userId).exec();
 };
 
-module.exports = { getUser };
+function getUserByUsername(username) {
+    return User.findOne({ username: username }).exec();
+};
+
+module.exports = { 
+    getUserById,
+    getUserByUsername
+};
