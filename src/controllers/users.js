@@ -1,30 +1,20 @@
-// import required dependencies
-
-// imports required models
-const User = require('../models/Data/User');
+// imports required queries
+const usersQueries = require('../queries/users');
 
 // gets every User
-function get(req, res) {
-    User.find((err, messages) => {
-        if (err) {
-            // @TODO: review this
-            res.json({
-                status: "error",
-                message: err,
-            });
-        }
-        
-        // @TODO: review this
-        res.json({
-            status: "success",
-            message: "Users retrieved successfully",
-            data: messages
-        });
+async function get(req, res) {
+    // @TODO: adds validation
+    const users = await usersQueries.getUsers();
+    
+    res.json({
+        status: "success",
+        message: "Users retrieved successfully",
+        data: users
     });
 };
 
 // creates a new User
-function post(req, res) {
+async function post(req, res) {
 
     let user = new User({
         name: req.body.name,
@@ -35,20 +25,12 @@ function post(req, res) {
         weightUnit: req.body.weightUnit,
         height: req.body.height,
     });
-    
-    User.create(user, (err) => {
-        if (err) {
-            res.json(err);
-        }
-        
-        // @TODO: review this
-        else {
-            res.json({
-                message: 'New User created!',
-                data: user
-            });
-        }  
-    });
+
+    const newUser = await usersQueries.createUser(user);
+    res.json({
+        message: 'New User created!',
+        data: newUser
+    }); 
 };
 
 module.exports = { get, post };
