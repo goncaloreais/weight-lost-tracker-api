@@ -11,37 +11,38 @@ const Session = require('../models/Auth/Session');
 const tokenExpiration = 30 * 60 * 1000;
 
 // token validation
-function validateToken(req, res) {
+function validateToken(req, res, next) {
     // /auth is the only request that do not requires a token
     if(req.originalUrl !== '/auth') {
 
         // if there is no token in the request
         if(!req.query.token) {
-            res.status(401).send(utils.errorResponse(401, 'Unauthorized!'));
+            res.status(401).send(httpResponse.errorResponse(401, 'Unauthorized!'));
             return;
         }
 
         Session.findOne({ sessionToken: req.query.token }, (error, session) => {
             // if the request token is not found
             if(!session) {
-                res.status(401).send(utils.errorResponse(401, 'Unauthorized!'));
+                res.status(401).send(httpResponse.errorResponse(401, 'Unauthorized!'));
                 return;
             }
 
             // if the token is found but it's expired
             if(Date.now() - session.lastAccess >= tokenExpiration) {
-                res.status(401).send(utils.errorResponse(401, 'Session expired!'));
+                res.status(401).send(httpResponse.errorResponse(401, 'Session expired!'));
                 return;
             }
 
             // if the token is found and is not expired
             session.lastAccess = Date.now();
             session.save((error, newSession) => {
-                req.next();
+                req.userId = newSession.userId;
+                next();
             });
         });
     } else {
-        req.next();
+        next();
     }
 }
 
