@@ -26,18 +26,11 @@ async function initialWeight(req, res) {
 // returns the total difference
 async function totalDifference(req, res) {
     const user = await userQueries.getUserById(req.userId);
-
-    const initialWeight = user.initialWeight;
-
-    // @TODO: make validation
-    const log = logsQueries.getLastLog(req.userId);
-    
-    let currentDifference = weightDifference.calculate(initialWeight - log.weight);
+    const currentDifference = weightDifference.calculate(user.initialWeight, user.currentWeight);
 
     const responseBody = {
-        initialWeight: initialWeight,
-        lastRecordedWeight: log.weight,
-        lastRecordDate: log.datetime,
+        initialWeight: user.initialWeight,
+        currentWeight: user.currentWeight,
         difference: currentDifference,
         unit: user.weightUnit,
         parsedWeight: currentDifference + user.weightUnit,

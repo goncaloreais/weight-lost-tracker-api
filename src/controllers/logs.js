@@ -4,6 +4,7 @@ const validator = require('../models/Data/validators');
 
 // imports required queries
 const logsQueries = require('../queries/logs');
+const usersQueries = require('../queries/users');
 
 // gets every Log
 async function get(req, res) {
@@ -33,10 +34,14 @@ async function post(req, res) {
     };
     
     const newLog = await logsQueries.createLog(req.userId, log);
-    
-    res.json({
-        message: 'New Log created!',
-        data: newLog
+
+    const user = await usersQueries.getUserById(req.userId);
+    user.currentWeight = req.body.weight;
+    user.save((error, newUser) => {
+        res.json({
+            message: 'New Log created!',
+            data: newLog
+        });
     });
 };
 
