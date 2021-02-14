@@ -1,13 +1,9 @@
 // importing dependencies
 const mongoose = require('mongoose');
-const helpers = require('../helpers');
 
 // creating the schema
 const LogSchema = mongoose.Schema({
-    datetime: {
-        type: Number,
-        set: helpers.insertTimestamp
-    },
+    datetime: Number,
     weight: Number
 });
 

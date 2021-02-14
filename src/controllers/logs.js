@@ -42,7 +42,7 @@ function post(req, res) {
     
     let log = new Log({
         weight: req.body.weight,
-        datetime: 0
+        datetime: req.body.datetime || Date.now(),
     });
     
     Log.create(log, (err) => {
